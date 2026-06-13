@@ -95,7 +95,7 @@ class FrontierSiliconAPI:
 
     async def create_session(self, context: str = "create_session") -> Optional[str]:
         """Create a new API session."""
-        _LOGGER.warning(
+        _LOGGER.debug(
             "FSAPI CREATE_SESSION requested; context=%s. If radio wakes now, this is the trigger.",
             context,
         )
@@ -152,7 +152,7 @@ class FrontierSiliconAPI:
         if not await self._ensure_session(allow_create=True, context=context):
             return "NO_SESSION"
 
-        _LOGGER.warning("FSAPI SET %s=%s; context=%s", path, value, context)
+        _LOGGER.debug("FSAPI SET %s=%s; context=%s", path, value, context)
         encoded_value = quote(str(value))
         url = f"{self.base_url}/SET/{path}?pin={self.pin}&sid={self.session_id}&value={encoded_value}"
         root, _ = await self._request(url, context=context)
@@ -213,7 +213,7 @@ class FrontierSiliconAPI:
 
     async def get_presets(self) -> list[dict[str, str]]:
         """Get saved presets/favorites for the current mode."""
-        _LOGGER.warning("FSAPI preset read changes navigation state first; this may wake/change some radios")
+        _LOGGER.debug("FSAPI preset read changes navigation state first; this may wake/change some radios")
         await self.set_value("netRemote.nav.state", "1", context="get_presets:navigate")
         await asyncio.sleep(0.3)
         presets = await self.list_get_next("netRemote.nav.presets", max_items=40, context="get_presets:list")
