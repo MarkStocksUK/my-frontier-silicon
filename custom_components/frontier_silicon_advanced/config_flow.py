@@ -83,11 +83,11 @@ class FrontierSiliconConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-@staticmethod
-@callback
-def async_get_options_flow(config_entry):
-    """Get the options flow for this handler."""
-    return FrontierSiliconOptionsFlowHandler()
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry):
+        """Get the options flow for this handler."""
+        return FrontierSiliconOptionsFlowHandler()
 
 
 class FrontierSiliconOptionsFlowHandler(config_entries.OptionsFlow):
