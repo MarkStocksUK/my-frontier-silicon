@@ -83,19 +83,15 @@ class FrontierSiliconConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    @staticmethod
-    @callback
-    def async_get_options_flow(config_entry):
-        """Get the options flow for this handler."""
-        return FrontierSiliconOptionsFlowHandler(config_entry)
+@staticmethod
+@callback
+def async_get_options_flow(config_entry):
+    """Get the options flow for this handler."""
+    return FrontierSiliconOptionsFlowHandler()
 
 
 class FrontierSiliconOptionsFlowHandler(config_entries.OptionsFlow):
     """Handle options flow for Frontier Silicon."""
-
-    def __init__(self, config_entry):
-        """Initialize options flow."""
-        self.config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""
