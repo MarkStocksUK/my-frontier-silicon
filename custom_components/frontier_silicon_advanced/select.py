@@ -15,17 +15,6 @@ from .coordinator import FrontierSiliconCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-# Mode ID to name mapping
-MODE_NAMES = {
-    "0": "Radio",
-    "1": "Spotify",
-    "2": "Music",
-    "3": "DAB+",
-    "4": "FM",
-    "5": "Bluetooth",
-    "6": "AUX",
-}
-
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -76,7 +65,14 @@ class FrontierSiliconMultiModePresetSelect(CoordinatorEntity, SelectEntity):
         
         if hasattr(self.coordinator, "_all_presets"):
             for mode_id, presets in self.coordinator._all_presets.items():
-                mode_name = MODE_NAMES.get(mode_id, f"Mode {mode_id}")
+                mode_name = next(
+                    (
+                        mode.get("label") or mode.get("name")
+                        for mode in self.coordinator._modes
+                        if mode.get("key") == mode_id
+                    ),
+                    None,
+                ) or f"Mode {mode_id}"
                 
                 for preset in presets:
                     preset_key = preset.get("key", "")
