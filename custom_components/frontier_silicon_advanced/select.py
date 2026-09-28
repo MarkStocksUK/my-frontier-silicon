@@ -98,15 +98,20 @@ class FrontierSiliconMultiModePresetSelect(CoordinatorEntity, SelectEntity):
     def current_option(self) -> str | None:
         """Return the current preset."""
         current_mode = self.coordinator.data.get("mode")
-        current_station = self.coordinator.data.get("station_name")
-        
+        current_station = (
+            self.coordinator.data.get("station_name") or ""
+        ).strip()
+    
         if current_mode and current_station:
-            mode_name = MODE_NAMES.get(current_mode, f"Mode {current_mode}")
             # Try to find matching preset
             for display_name, (mode_id, _) in self._preset_map.items():
-                if mode_id == current_mode and current_station in display_name:
+                if mode_id != current_mode:
+                    continue
+    
+                preset_name = display_name.split("] ", 1)[-1].strip()
+                if current_station == preset_name:
                     return display_name
-        
+    
         return None
 
     @property
